@@ -1,10 +1,9 @@
 package com.example.bookstore19.domain;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 public class Book {
@@ -16,16 +15,30 @@ public class Book {
     private int year;
     private double price;
 
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "categoryId")
+    private Category category;
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public Book(){
 
     }
 
-    public Book(String title, String author, String isbn, int year, double price) {
+    public Book(String title, String author, String isbn, int year, double price, Category category) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.year = year;
         this.price = price;
+        this.category = category;
     }
 
     public long getId() {
@@ -75,4 +88,13 @@ public class Book {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        if (this.category != null)
+            return "Book [id=" + id + ", title=" + title + ", author=" + author + ", isbn=" + isbn + ", year=" + year + ", price=" + price + ", category=" + this.getCategory() + "]";
+        else
+            return "Book [id=" + id + ", title=" + title + ", author=" + author + ", isbn=" + isbn + ", year=" + year + ", price=" + price + "]";
+    }
+
 }
